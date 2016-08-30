@@ -1,0 +1,33 @@
+<div>
+	<div id="new-slideBox-base"></div>
+	<div class="new-slideBox" ng-swipe-left="next()" ng-swipe-right="preview()">
+		<a ng-class="{'icon-resize':!isMaximized, 'icon-collapse': isMaximized}" ng-click="maximize($event)"></a>
+		<a class="icon-close" ng-click="close()"></a>
+		<div ng-click="close()" class="image-area" ng-class="{maximized : isMaximized, 'only-one':slideshow.photosList.length === 1}">
+			<ul ng-if="slideshow.photosList.length">
+				<li ng-repeat="photo in slideshow.photosList" ng-class="{'next':directionIsNext,'preview':!directionIsNext, selected:$index === selectedIndex, disable:$index !== selectedIndex}">
+					<div ng-class="{'photo-with-description table-layout':(photo.description && !isMaximized),'photo-container':(!photo.description || isMaximized)}">
+						<div class="photo" ng-class="{'maximizedPhoto': isMaximized, 'column-layout':photo.description && !isMaximized}" >
+							<img  ng-click="playOrPause(); $event.stopPropagation();" ng-src="{{photo.path}}" alt="" />
+							<a  ng-click="playOrPause(); $event.stopPropagation();" class="container-icon-play" ng-hide="hidePlayIcon"><span class="icon-play"></span></a>
+						</div>
+						<div ng-if="photo.description && !isMaximized" class="column-layout description-container">
+							<p class="description">{{photo.description}}</p>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="preview-area" ng-show="thumbnails.length > 1 && !isMaximized">
+			<a class="icon-angle-left" ng-click="preview()"></a>
+			<ul>
+				<li class="thumbnail-item" ng-repeat="thumb in thumbnails">
+					<div ng-class="{selected:$index === selectedThumbIndex}"  ng-click="slideBox(thumb.index)" >
+						<img class="thumbnail"  ng-src="{{thumb.photo.path}}" alt="" />
+					</div>
+				</li>
+			</ul>
+			<a class="icon-angle-right" ng-click="next()"></a>
+		</div>
+	</div>
+</div>
