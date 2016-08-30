@@ -192,6 +192,10 @@
     position: relative;
 }
 
+.new-slideBox .preview-area a i {
+    vertical-align: middle;
+}
+
 .new-slideBox .preview-area .icon-angle-right{
     float: right;
     right: 0px;

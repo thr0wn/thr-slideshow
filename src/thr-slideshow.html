@@ -22,7 +22,9 @@
             </ul>
         </div>
         <div class="preview-area" ng-show="thumbnails.length > 1 && !isMaximized">
-            <a class="icon-angle-left" ng-click="preview()"></a>
+            <a class="icon-angle-left" ng-click="preview()">
+                <i class="fa fa-angle-left" aria-hidden="true"></i>
+            </a>
             <ul>
                 <li class="thumbnail-item" ng-repeat="thumb in thumbnails">
                     <div ng-class="{selected:$index === selectedThumbIndex}"  ng-click="slideBox(thumb.index)" >
@@ -30,7 +32,9 @@
                     </div>
                 </li>
             </ul>
-            <a class="icon-angle-right" ng-click="next()"></a>
+            <a class="icon-angle-right" ng-click="next()">
+                <i class="fa fa-angle-right" aria-hidden="true"></i>
+            </a>
         </div>
     </div>
 </div>
