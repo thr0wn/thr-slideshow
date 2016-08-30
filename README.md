@@ -10,7 +10,7 @@ This directive exposes a basic slideshow as AngularJS 1.x module.
 
 ## Usage
 
-After placing thr-slideshow in any place of the <body>, some controller must inject thrSlideshow and call thrSlideshow.show with the appropriate parameters, e.g:
+After placing thr-slideshow in any place of html body, some controller must inject thrSlideshow and call thrSlideshow.show with the appropriate parameters, e.g:
 ```html
 <body>
     ...
