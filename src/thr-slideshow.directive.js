@@ -1,19 +1,19 @@
 angular
     .module('thr-slideshow', [])
     .directive('thrSlideshow', [
-        () => ({
+        '$window', '$interval', 'thrSlideshow',
+        (window, interval, thrSlideshow) => ({
             restrict: 'E',
-            scope:true,
+            scope: true,
             templateUrl: 'thr-slideshow.html',
             link: (scope, element) => {
-                scope.slideshow = $rootScope.slideshow;
+                scope.slideshow = thrSlideshow;
 
-                scope.translation = translation;
                 scope.selectedImg = [];
                 scope.thumbnails = [];
                 scope.hidePlayIcon = true;
                 scope.isMaximized = false;
-                scope.close = function () {
+                scope.close = () => {
                     scope.hidePlayIcon = true;
                     scope.pause();
                     scope.isMaximized = false;
@@ -21,13 +21,13 @@ angular
                     closeFullScreen();
                 };
 
-                scope.$watch('slideshow.visible', function (isVisible) {
+                scope.$watch('slideshow.visible', isVisible => {
                     if (isVisible) {
                         scope.slideBox(scope.slideshow.photoIndex);
                     }
                 });
 
-                scope.slideBox = function (index) {
+                scope.slideBox = index => {
                     if (index < scope.selectedIndex) {
                         scope.directionIsNext = false;
                     } else {
@@ -46,21 +46,21 @@ angular
                 scope.playSlide = undefined;
                 scope.directionIsNext = true;
 
-                var beginThumnail = 0;
+                let beginThumnail = 0;
                 scope.selectedThumbIndex = 0;
-                var getThumbnails = function (index) {
-                    var endThumbnail = numberOfThumb();
+                const getThumbnails = index => {
+                    let endThumbnail = numberOfThumb();
                     if (endThumbnail < index || endThumbnail === index) {
                         beginThumnail = (index - endThumbnail + 1);
                     } else if (beginThumnail > index) {
                         beginThumnail = index;
                     }
 
-                    var length = scope.slideshow.photosList.length;
-                    var thumbs = [];
-                    var thumb = {};
-                    var begin = beginThumnail;
-                    for (var i = 0; i < endThumbnail; i++) {
+                    const length = scope.slideshow.photosList.length;
+                    const thumbs = [];
+                    let thumb = {};
+                    let begin = beginThumnail;
+                    for (let i = 0; i < endThumbnail; i++) {
                         thumb = {};
                         begin = (begin) % length;
                         thumb.index = begin;
@@ -78,12 +78,12 @@ angular
                     return thumbs;
                 };
 
-                angular.element(window).bind('resize', function () {
+                angular.element(window).bind('resize', () => {
                     scope.thumbnails = getThumbnails(scope.selectedIndex);
                     scope.$digest();
                 });
 
-                angular.element(window).keyup(function (e) {
+                angular.element(window).keyup(e => {
                     switch (e.keyCode) {
                         case 27:
                             if (scope.isMaximized) {
@@ -107,9 +107,9 @@ angular
                 });
 
                 function numberOfThumb() {
-                    var thum_size = 160;
-                    var area = document.getElementsByClassName('preview-area')[0];
-                    var number = parseInt(area.offsetWidth / thum_size);
+                    const thum_size = 160;
+                    const area = document.getElementsByClassName('preview-area')[0];
+                    let number = parseInt(area.offsetWidth / thum_size);
                     if (number === 0) {
                         number = parseInt(window.innerWidth / thum_size);
                     }
@@ -121,18 +121,18 @@ angular
                     return number;
                 }
 
-                scope.next = function () {
+                scope.next = () => {
                     scope.directionIsNext = true;
-                    var size = scope.slideshow.photosList.length;
+                    const size = scope.slideshow.photosList.length;
                     scope.selectedIndex = (scope.selectedIndex + 1) % size;
                     scope.selectedImg = scope.slideshow.photosList[scope.selectedIndex];
                     scope.thumbnails = getThumbnails(scope.selectedIndex);
                     scope.play();
                 };
 
-                scope.preview = function () {
+                scope.preview = () => {
                     scope.directionIsNext = false;
-                    var size = scope.slideshow.photosList.length;
+                    const size = scope.slideshow.photosList.length;
                     if (scope.selectedIndex === 0) {
                         scope.selectedIndex = size - 1;
                     } else {
@@ -142,7 +142,8 @@ angular
                     scope.thumbnails = getThumbnails(scope.selectedIndex);
                     scope.play();
                 };
-                scope.playOrPause = function () {
+
+                scope.playOrPause = () => {
                     scope.hidePlayIcon = !scope.hidePlayIcon;
                     if (scope.playSlide) {
                         scope.pause();
@@ -150,14 +151,16 @@ angular
                         scope.play();
                     }
                 };
-                scope.play = function () {
+
+                scope.play = () => {
                     scope.hidePlayIcon = true;
                     interval.cancel(scope.playSlide);
-                    scope.playSlide = interval(function () {
+                    scope.playSlide = interval(() => {
                         scope.next();
                     }, 5000);
                 };
-                scope.pause = function () {
+
+                scope.pause = () => {
                     scope.hidePlayIcon = false;
                     if (scope.playSlide) {
                         interval.cancel(scope.playSlide);
@@ -165,8 +168,8 @@ angular
                     }
                 };
 
-                scope.maximize = function (event) {
-                    var slidebox = angular.element(event.target).closest('.new-slideBox')[0];
+                scope.maximize = event => {
+                    const slidebox = angular.element(event.target).closest('.new-slideBox')[0];
                     toggleFullScreen(slidebox);
                     scope.isMaximized = !scope.isMaximized;
                 };

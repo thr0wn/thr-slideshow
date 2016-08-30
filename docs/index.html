@@ -1,29 +1,43 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>thr-slideshow demo</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-        <link href="thr-slideshow.css" rel="stylesheet">
-        <link href="demo.css" rel="stylesheet">
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.js"></script>
-        <script src="thr-slideshow.js"></script>
-        <script src="demo.js"></script>
-    </head>
-    <body ng-app="demo-app" ng-controller="DemoCtrl">
-        <div class="container">
-            <div class="col-md-10 col-md-offset-1">
-                <div class="header">
-                    <h2>thr-slideshow example</h2>
-                </div>
-                <hr>
-                <div class="body">
 
-                </div>
+<head>
+    <title>thr-slideshow demo</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1"
+        crossorigin="anonymous">
+    <link href="thr-slideshow.css" rel="stylesheet">
+    <link href="demo.css" rel="stylesheet">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.js"></script>
+    <script src="thr-slideshow.js"></script>
+    <script src="demo.js"></script>
+</head>
+
+<body ng-app="demo-app" ng-controller="DemoCtrl">
+    <div class="container">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="header">
+                <h2>thr-slideshow example</h2>
+            </div>
+            <hr>
+            <div class="body">
+                <ul>
+                    <li>
+                        <p class="inline-block">thr-slideshow is invoked via thrSlideshow service, thus your controller must have it as a dependency.</p>
+                    </li>
+                    <li>
+                        <p class="inline-block">As an example, a click at the following icon will call thrSlideshow.show</p>&nbsp;
+                        <i class="disable-select fa fa-photo fa-lg" ng-click="openSlideShow()"></i>
+                    </li>
+                </ul>
+                <thr-slideshow></thr-slideshow>
             </div>
         </div>
-    </body>
+    </div>
+</body>
+
 </html>

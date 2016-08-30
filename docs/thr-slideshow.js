@@ -1,14 +1,13 @@
 'use strict';
 
-angular.module('thr-slideshow', []).directive('thrSlideshow', [function () {
+angular.module('thr-slideshow', []).directive('thrSlideshow', ['$window', '$interval', 'thrSlideshow', function (window, interval, thrSlideshow) {
     return {
         restrict: 'E',
         scope: true,
         templateUrl: 'thr-slideshow.html',
         link: function link(scope, element) {
-            scope.slideshow = $rootScope.slideshow;
+            scope.slideshow = thrSlideshow;
 
-            scope.translation = translation;
             scope.selectedImg = [];
             scope.thumbnails = [];
             scope.hidePlayIcon = true;
@@ -141,6 +140,7 @@ angular.module('thr-slideshow', []).directive('thrSlideshow', [function () {
                 scope.thumbnails = getThumbnails(scope.selectedIndex);
                 scope.play();
             };
+
             scope.playOrPause = function () {
                 scope.hidePlayIcon = !scope.hidePlayIcon;
                 if (scope.playSlide) {
@@ -149,6 +149,7 @@ angular.module('thr-slideshow', []).directive('thrSlideshow', [function () {
                     scope.play();
                 }
             };
+
             scope.play = function () {
                 scope.hidePlayIcon = true;
                 interval.cancel(scope.playSlide);
@@ -156,6 +157,7 @@ angular.module('thr-slideshow', []).directive('thrSlideshow', [function () {
                     scope.next();
                 }, 5000);
             };
+
             scope.pause = function () {
                 scope.hidePlayIcon = false;
                 if (scope.playSlide) {
@@ -204,4 +206,37 @@ angular.module('thr-slideshow', []).directive('thrSlideshow', [function () {
         }
     };
 }]);
-angular.module('thr-slideshow').run(['$templateCache', function($templateCache) {$templateCache.put('thr-slideshow.html','<div>\r\n\t<div id="new-slideBox-base"></div>\r\n\t<div class="new-slideBox" ng-swipe-left="next()" ng-swipe-right="preview()">\r\n\t\t<a ng-class="{\'icon-resize\':!isMaximized, \'icon-collapse\': isMaximized}" ng-click="maximize($event)"></a>\r\n\t\t<a class="icon-close" ng-click="close()"></a>\r\n\t\t<div ng-click="close()" class="image-area" ng-class="{maximized : isMaximized, \'only-one\':slideshow.photosList.length === 1}">\r\n\t\t\t<ul ng-if="slideshow.photosList.length">\r\n\t\t\t\t<li ng-repeat="photo in slideshow.photosList" ng-class="{\'next\':directionIsNext,\'preview\':!directionIsNext, selected:$index === selectedIndex, disable:$index !== selectedIndex}">\r\n\t\t\t\t\t<div ng-class="{\'photo-with-description table-layout\':(photo.description && !isMaximized),\'photo-container\':(!photo.description || isMaximized)}">\r\n\t\t\t\t\t\t<div class="photo" ng-class="{\'maximizedPhoto\': isMaximized, \'column-layout\':photo.description && !isMaximized}" >\r\n\t\t\t\t\t\t\t<img  ng-click="playOrPause(); $event.stopPropagation();" ng-src="{{photo.path}}" alt="" />\r\n\t\t\t\t\t\t\t<a  ng-click="playOrPause(); $event.stopPropagation();" class="container-icon-play" ng-hide="hidePlayIcon"><span class="icon-play"></span></a>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t<div ng-if="photo.description && !isMaximized" class="column-layout description-container">\r\n\t\t\t\t\t\t\t<p class="description">{{photo.description}}</p>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</li>\r\n\t\t\t</ul>\r\n\t\t</div>\r\n\t\t<div class="preview-area" ng-show="thumbnails.length > 1 && !isMaximized">\r\n\t\t\t<a class="icon-angle-left" ng-click="preview()"></a>\r\n\t\t\t<ul>\r\n\t\t\t\t<li class="thumbnail-item" ng-repeat="thumb in thumbnails">\r\n\t\t\t\t\t<div ng-class="{selected:$index === selectedThumbIndex}"  ng-click="slideBox(thumb.index)" >\r\n\t\t\t\t\t\t<img class="thumbnail"  ng-src="{{thumb.photo.path}}" alt="" />\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</li>\r\n\t\t\t</ul>\r\n\t\t\t<a class="icon-angle-right" ng-click="next()"></a>\r\n\t\t</div>\r\n\t</div>\r\n</div>\r\n');}]);
+angular.module('thr-slideshow').run(['$templateCache', function($templateCache) {$templateCache.put('thr-slideshow.html','<div ng-if="slideshow.visible">\r\n    <div class="new-slideBox" ng-swipe-left="next()" ng-swipe-right="preview()">\r\n        <a ng-class="{\'icon-resize\':!isMaximized, \'icon-collapse\': isMaximized}" ng-click="maximize($event)">\r\n            <i class="fa" ng-class="{\'fa-expand\':!isMaximized, \'fa-compress\': isMaximized}" aria-hidden="true"></i>\r\n        </a>\r\n        <a class="icon-close" ng-click="close()">\r\n            <i class="fa fa-times" aria-hidden="true"></i>\r\n        </a>\r\n        <div ng-click="close()" class="image-area" ng-class="{maximized : isMaximized, \'only-one\':slideshow.photosList.length === 1}">\r\n            <ul ng-if="slideshow.photosList.length">\r\n                <li ng-repeat="photo in slideshow.photosList" ng-class="{\'next\':directionIsNext,\'preview\':!directionIsNext, selected:$index === selectedIndex, disable:$index !== selectedIndex}">\r\n                    <div ng-class="{\'photo-with-description table-layout\':(photo.description && !isMaximized),\'photo-container\':(!photo.description || isMaximized)}">\r\n                        <div class="photo" ng-class="{\'maximizedPhoto\': isMaximized, \'column-layout\':photo.description && !isMaximized}" >\r\n                            <img  ng-click="playOrPause(); $event.stopPropagation();" ng-src="{{photo.path}}" alt="" />\r\n                            <a  ng-click="playOrPause(); $event.stopPropagation();" class="container-icon-play" ng-hide="hidePlayIcon"><span class="icon-play"></span></a>\r\n                        </div>\r\n                        <div ng-if="photo.description && !isMaximized" class="column-layout description-container">\r\n                            <p class="description">{{photo.description}}</p>\r\n                        </div>\r\n                    </div>\r\n                </li>\r\n            </ul>\r\n        </div>\r\n        <div class="preview-area" ng-show="thumbnails.length > 1 && !isMaximized">\r\n            <a class="icon-angle-left" ng-click="preview()"></a>\r\n            <ul>\r\n                <li class="thumbnail-item" ng-repeat="thumb in thumbnails">\r\n                    <div ng-class="{selected:$index === selectedThumbIndex}"  ng-click="slideBox(thumb.index)" >\r\n                        <img class="slideshow-thumbnail"  ng-src="{{thumb.photo.path}}" alt="" />\r\n                    </div>\r\n                </li>\r\n            </ul>\r\n            <a class="icon-angle-right" ng-click="next()"></a>\r\n        </div>\r\n    </div>\r\n</div>\r\n');}]);
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+angular.module('thr-slideshow').service('thrSlideshow', function () {
+    function _class() {
+        _classCallCheck(this, _class);
+
+        this.visible = false;
+        this.photosList = [];
+        this.photoIndex = 0;
+    }
+
+    _createClass(_class, [{
+        key: 'show',
+        value: function show(photosList, index) {
+            this.photosList = photosList;
+            this.photoIndex = index || 0;
+            this.visible = true;
+        }
+    }, {
+        key: 'hide',
+        value: function hide() {
+            this.visible = false;
+            this.photosList = [];
+            this.photoIndex = 0;
+        }
+    }]);
+
+    return _class;
+}());
