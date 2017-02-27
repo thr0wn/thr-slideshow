@@ -38,7 +38,12 @@ angular
                     scope.selectedImg = scope.slideshow.photosList[index];
                     scope.showPopup = true;
                     scope.thumbnails = getThumbnails(index);
-                    scope.play();
+
+                    // do not autoplay
+                    //scope.play();
+                    scope.pause();
+                    scope.hidePlayIcon = true;
+
                     return false;
                 };
 
@@ -173,6 +178,16 @@ angular
                     toggleFullScreen(slidebox);
                     scope.isMaximized = !scope.isMaximized;
                 };
+
+                scope.getFileExt = path => {
+                    return path.split('.').pop();
+                }
+
+                scope.isVideo = path => {
+                    var ext = scope.getFileExt(path);
+
+                    return ext == 'mp4';
+                }
 
 
                 function toggleFullScreen(element) {
